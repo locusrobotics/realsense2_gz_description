@@ -22,9 +22,11 @@ repos:
       - id: check-docstring-first
       - id: check-merge-conflict
       - id: check-symlinks
+      - id: check-xml
       - id: debug-statements
       - id: end-of-file-fixer
       - id: mixed-line-ending
+      - id: trailing-whitespace
       - id: fix-byte-order-marker
   - repo: https://github.com/psf/black
     rev: 24.10.0
@@ -36,3 +38,8 @@ repos:
       - id: codespell
         args: ['--write-changes']
         exclude: CHANGELOG.rst
+  # XML Lint
+  - repo: https://github.com/comkieffer/xml-linter-hook.git
+    rev: 1.0.0
+    hooks:
+      - id: xmllint
