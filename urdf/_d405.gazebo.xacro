@@ -25,7 +25,7 @@ For example:
     Assumptions:
     Simulated RGB and Depth sensors are in the same location as the RGB sensor of the physical camera.
     Simulated RGB and Depth sensors and have the same FOV as the RGB physical sensor.
-    Note physical hardware publishes pointcloud in `camera_depth_optical_frame` where this sensor will use
+    Note: physical hardware publishes pointcloud in `camera_depth_optical_frame` where this sensor will use
     the referenced camera color_frame. -->
     <xacro:property name="realsense_h_fov" value="${69 * pi/180}" />
     <xacro:property name="realsense_v_fov" value="${42 * pi/180}" />

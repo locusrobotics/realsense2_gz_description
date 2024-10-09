@@ -46,7 +46,7 @@ This plugin can be started from your URDF or world.sdf file.
     <render_engine>ogre2</render_engine>
   </plugin>
 </gazebo>
-```  
+```
 
 you can also refer to the the [example.urdf.xacro](./urdf/example_d415_gazebo.urdf.xacro) included.
 
