@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<robot name="gazebo_d405" xmlns:xacro="http://www.ros.org/wiki/xacro" xmlns:ignition="http://gazebosim.org/schema">
+
+<!--
+Gazebo plugins can only be included once so this xacro assumes that a parent will include and configure them.
+This xacro requires Gazebo plugin:
+  - ignition::gazebo::systems::Sensors
+  to publish simulated RGBD camera data
+
+For example:
+<gazebo>
+  <plugin filename="libignition-gazebo-sensors-system.so" name="ignition::gazebo::systems::Sensors">
+    <render_engine>ogre2</render_engine>
+  </plugin>
+</gazebo>
+-->
+<xacro:macro name="gazebo_d405" params="
+  name:=camera
+  fps:=15
+  gz_topic_name:=camera
+  image_width:=1280
+  image_height:=720">
+
+    <!-- Realsense D405 RGB properties
+    Assumptions:
+    Simulated RGB and Depth sensors are in the same location as the RGB sensor of the physical camera.
+    Simulated RGB and Depth sensors and have the same FOV as the RGB physical sensor.
+    Note physical hardware publishes pointcloud in `camera_depth_optical_frame` where this sensor will use
+    the referenced camera color_frame. -->
+    <xacro:property name="realsense_h_fov" value="${69 * pi/180}" />
+    <xacro:property name="realsense_v_fov" value="${42 * pi/180}" />
+    <xacro:property name="fx" value="${image_width * 0.5 / tan(realsense_h_fov * 0.5)}" />
+    <xacro:property name="fy" value="${image_height * 0.5 / tan(realsense_v_fov * 0.5)}" />
+    <xacro:property name="cx" value="${image_width * 0.5}" />
+    <xacro:property name="cy" value="${image_height * 0.5}" />
+
+    <gazebo reference="${name}_color_frame">
+        <sensor name="${name}" type="rgbd_camera">
+            <camera>
+                <horizontal_fov>${realsense_h_fov}</horizontal_fov>
+                <image>
+                    <width>${image_width}</width>
+                    <height>${image_height}</height>
+                    <format>RGB_INT8</format>
+                </image>
+                <clip>
+                    <near>0.028</near>
+                    <far>5</far>
+                </clip>
+                <distortion>
+                    <k1>0.0</k1>
+                    <k2>0.0</k2>
+                    <k3>0.0</k3>
+                    <p1>0.0</p1>
+                    <p2>0.0</p2>
+                    <center>0.5 0.5</center>
+                </distortion>
+                <lens>
+                    <intrinsics>
+                        <fx>${fx}</fx>
+                        <fy>${fy}</fy>
+                        <cx>${cx}</cx>
+                        <cy>${cy}</cy>
+                        <s>0</s>
+                    </intrinsics>
+                    <projection>
+                        <p_fx>${fx}</p_fx>
+                        <p_fy>${fy}</p_fy>
+                        <p_cx>${cx}</p_cx>
+                        <p_cy>${cy}</p_cy>
+                        <tx>0</tx>
+                        <ty>0</ty>
+                    </projection>
+                </lens>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0</mean>
+                    <stddev>0.00</stddev>
+                </noise>
+                <depth_camera>
+                    <clip>
+                        <near>0.028</near>
+                        <far>5</far>
+                    </clip>
+                </depth_camera>
+                <optical_frame_id>${name}_color_optical_frame</optical_frame_id>
+            </camera>
+            <ignition_frame_id>${name}_color_frame</ignition_frame_id>
+            <always_on>1</always_on>
+            <update_rate>${fps}</update_rate>
+            <visualize>false</visualize>
+            <topic>${gz_topic_name}</topic>
+            <enable_metrics>false</enable_metrics>
+        </sensor>
+    </gazebo>
+
+</xacro:macro>
+</robot>
