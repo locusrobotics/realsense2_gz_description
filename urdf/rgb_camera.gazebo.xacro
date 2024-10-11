@@ -64,7 +64,7 @@ For example:
             <always_on>1</always_on>
             <update_rate>${fps}</update_rate>
             <topic>${gz_topic_name}/image</topic>
-            <enable_metrics>true</enable_metrics>
+            <enable_metrics>false</enable_metrics>
         </sensor>
     </gazebo>
 

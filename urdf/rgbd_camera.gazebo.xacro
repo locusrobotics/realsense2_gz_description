@@ -94,7 +94,7 @@ For example:
             <update_rate>${fps}</update_rate>
             <visualize>false</visualize>
             <topic>${gz_topic_name}</topic>
-            <enable_metrics>true</enable_metrics>
+            <enable_metrics>false</enable_metrics>
         </sensor>
     </gazebo>
 
