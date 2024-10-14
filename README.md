@@ -22,7 +22,7 @@ Which should start a simulated camera in Gazebo with a few objects in front of i
 
 # Example Usage in URDF
 
-In your robots urdf.xacro include the desired Realsense model along with its gazebo description.
+In your robots urdf.xacro include the desired Realsense model along with its Gazebo description.
 ```xml
 <xacro:include filename="$(find realsense2_description)/urdf/_d415.urdf.xacro" />
 <xacro:include filename="$(find realsense2_gz_description)/urdf/_d415.gazebo.xacro" />
@@ -49,6 +49,18 @@ This plugin can be started from your URDF or world.sdf file.
 ```
 
 you can also refer to the the [example.urdf.xacro](./urdf/example_d415_gazebo.urdf.xacro) included.
+
+## Gazebo only features
+
+Gazebo offers a triggered based RGB camera that can be enabled by passing `triggered="true"` to the Gazebo description xacro.
+Currently this feature does not appear to not work with the RGBD sensor, but will hopefully be added soon.
+Switching the camera to only `trigger` when requested allows developers to better control the computation load required by each sensor.
+Note triggering is not a feature the Realsense hardware offers unfortunately.
+
+To trigger the camera from the command line you can publish on the Gazebo topic `camera_name/trigger`.
+```bash
+ign topic -t "/name/trigger" -m Boolean -p "data: true" -n 1
+```
 
 ## Contributing
 
