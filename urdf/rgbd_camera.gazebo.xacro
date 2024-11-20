@@ -48,7 +48,7 @@ For example:
                     <format>RGB_INT8</format>
                 </image>
                 <clip>
-                    <near>0.01</near>
+                    <near>0.02</near>
                     <far>10</far>
                 </clip>
                 <distortion>
