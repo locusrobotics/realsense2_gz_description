@@ -22,7 +22,7 @@
   Starting this plugin in the top level allows developers to define multiple cameras in their robot and only include the plugin once.
   If you don't want to start the Sensors plugin in your URDF you can move starting this plugin to the world.sdf file you are working with. -->
   <gazebo>
-    <plugin filename="libignition-gazebo-sensors-system.so" name="ignition::gazebo::systems::Sensors">
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
       <render_engine>ogre2</render_engine>
     </plugin>
   </gazebo>

@@ -9,16 +9,16 @@
       <real_time_factor>1.0</real_time_factor>
     </physics>
     <plugin
-      filename="ignition-gazebo-physics-system"
-      name="ignition::gazebo::systems::Physics">
+      filename="gz-sim-physics-system"
+      name="gz::sim::systems::Physics">
     </plugin>
     <plugin
-      filename="ignition-gazebo-user-commands-system"
-      name="ignition::gazebo::systems::UserCommands">
+      filename="gz-sim-user-commands-system"
+      name="gz::sim::systems::UserCommands">
     </plugin>
     <plugin
-      filename="ignition-gazebo-scene-broadcaster-system"
-      name="ignition::gazebo::systems::SceneBroadcaster">
+      filename="gz-sim-scene-broadcaster-system"
+      name="gz::sim::systems::SceneBroadcaster">
     </plugin>
 
     <light type="directional" name="sun">
@@ -65,19 +65,19 @@
     <include>
         <pose>1.2 0.0 0.0 0.0 0.0 1.57</pose>
         <uri>
-        https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Construction Cone
+          https://fuel.gazebosim.org/1.0/OpenRobotics/models/Construction Cone
         </uri>
     </include>
     <include>
         <pose>1.2 0.5 0.0 0.0 0.0 1.57</pose>
         <uri>
-        https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Suitcase2H
+          https://fuel.gazebosim.org/1.0/OpenRobotics/models/Suitcase2H
         </uri>
     </include>
     <include>
         <pose>1.2 -0.5 0.0 0.0 0.0 1.57</pose>
         <uri>
-        https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Suitcase1H
+          https://fuel.gazebosim.org/1.0/OpenRobotics/models/Suitcase1H
         </uri>
     </include>
   </world>

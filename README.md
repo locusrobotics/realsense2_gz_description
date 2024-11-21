@@ -2,7 +2,7 @@
 
 [![Format Status](https://github.com/MarqRazz/realsense2_gz_description/actions/workflows/format.yaml/badge.svg)](https://github.com/MarqRazz/realsense2_gz_description/actions/workflows/format.yaml)
 
-Description: This ROS 2 package is designed to be used in unison with [realsense2_description](https://github.com/IntelRealSense/realsense-ros/tree/ros2-master/realsense2_description) and allows for easy definition of Realsense cameras that can be simulated in Gazebo Fortress and newer. It may support other versions of Ignition Gazebo but this has not been tested.
+Description: This ROS 2 package is designed to be used in unison with [realsense2_description](https://github.com/IntelRealSense/realsense-ros/tree/ros2-master/realsense2_description) and allows for easy definition of Realsense cameras that can be simulated in Gazebo Fortress and newer. It may support other versions of Gazebo but this has not been tested.
 
 ## Running Example Launch
 
@@ -42,7 +42,7 @@ Then call the xacros and specify the same `name` and other optional arguments.
 This plugin can be started from your URDF or world.sdf file.
 ```xml
 <gazebo>
-  <plugin filename="libignition-gazebo-sensors-system.so" name="ignition::gazebo::systems::Sensors">
+  <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
     <render_engine>ogre2</render_engine>
   </plugin>
 </gazebo>
