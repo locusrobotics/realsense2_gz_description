@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
-<robot name="gazebo_rgbd" xmlns:xacro="http://www.ros.org/wiki/xacro" xmlns:ignition="http://gazebosim.org/schema">
+<robot name="gazebo_rgbd" xmlns:xacro="http://www.ros.org/wiki/xacro" xmlns:gz="http://gazebosim.org/schema">
 
 <!--
 Gazebo plugins can only be included once so this xacro assumes that a parent will include and configure them.
 This xacro requires Gazebo plugin:
-  - ignition::gazebo::systems::Sensors
+  - gz::sim::systems::Sensors
   to publish simulated RGBD camera data
 
 For example:
 <gazebo>
-  <plugin filename="libignition-gazebo-sensors-system.so" name="ignition::gazebo::systems::Sensors">
+  <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
     <render_engine>ogre2</render_engine>
   </plugin>
 </gazebo>
@@ -89,7 +89,7 @@ For example:
                 </depth_camera>
                 <optical_frame_id>${name}_color_optical_frame</optical_frame_id>
             </camera>
-            <ignition_frame_id>${name}_color_frame</ignition_frame_id>
+            <gz_frame_id>${name}_color_frame</gz_frame_id>
             <always_on>1</always_on>
             <update_rate>${fps}</update_rate>
             <visualize>false</visualize>

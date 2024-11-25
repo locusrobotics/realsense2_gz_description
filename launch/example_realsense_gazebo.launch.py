@@ -95,7 +95,7 @@ def generate_launch_description():
         condition=IfCondition(launch_rviz),
     )
 
-    ignition_spawn_entity = Node(
+    gz_spawn_entity = Node(
         package="ros_gz_sim",
         executable="create",
         output="screen",
@@ -122,17 +122,17 @@ def generate_launch_description():
     )
 
     # Bridge the camera data to ROS and match the default topics that the real camera would publish
-    # Note the gz_topic_name comes from _realsense_model.gazebo.xacro defaults which defaults to `camera` here.
+    # Note the gz_topic_name comes from <realsense_model>.gazebo.xacro which is defaulting to `camera` in this example.
     gazebo_bridge = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
         parameters=[{"use_sim_time": True}],
         arguments=[
-            "/camera/image@sensor_msgs/msg/Image[ignition.msgs.Image",
-            "/camera/depth_image@sensor_msgs/msg/Image[ignition.msgs.Image",
-            "/camera/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked",
-            "/camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo",
-            "/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock",
+            "/camera/image@sensor_msgs/msg/Image[gz.msgs.Image",
+            "/camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image",
+            "/camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked",
+            "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+            "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
         ],
         remappings=[
             (
@@ -163,7 +163,7 @@ def generate_launch_description():
         robot_state_publisher_node,
         rviz_node,
         OpaqueFunction(function=launch_gz),
-        ignition_spawn_entity,
+        gz_spawn_entity,
         gazebo_bridge,
     ]
 
