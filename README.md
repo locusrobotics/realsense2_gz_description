@@ -1,43 +1,29 @@
-# Realsense Gazebo description
+# Gazebo Camera Descriptions
 
-[![Format Status](https://github.com/MarqRazz/realsense2_gz_description/actions/workflows/format.yaml/badge.svg)](https://github.com/MarqRazz/realsense2_gz_description/actions/workflows/format.yaml)
+[![Format Status](https://github.com/locusrobotics/gz_camera_descriptions/actions/workflows/format.yaml/badge.svg)](https://github.com/locusrobotics/gz_camera_descriptions/actions/workflows/format.yaml)
 
-Description: This ROS 2 package is designed to be used in unison with [realsense2_description](https://github.com/IntelRealSense/realsense-ros/tree/ros2-master/realsense2_description) and allows for easy definition of Realsense cameras that can be simulated in Gazebo Fortress and newer. It may support other versions of Gazebo but this has not been tested.
+### Getting Starteed
 
-## Running Example Launch
+This package assumes that you want to simulate a camera with Gazebo. In the [package.xml](gz_camera_macros/package.xml) of the generic macros or even a specific camera like the [Realsense](../gz_camera_descriptions/realsense2_gz_description/package.xml) requires you have Gazebo installed.
 
-This package includes a launch file to start Gazebo, bridge the data to ROS 2 and display the simulated camera data in Rviz.
+In your robots URDF....
 
-Once you have built this package and sourced your workspace you can run
-```bash
-ros2 launch realsense2_gz_description example_realsense_gazebo.launch.py
-```
-
-> Note: you can specify `headless:=false` and it will also open the Gazebo GUI.
-
-Which should start a simulated camera in Gazebo with a few objects in front of it. In the Rviz window that launches you can see the RGB images streaming along with the point cloud in the main view.
-
-<img src="doc/realsense_gazebo.png"  width="50%" >
-
-
-# Example Usage in URDF
-
-In your robots urdf.xacro include the desired Realsense model along with its Gazebo description.
+1. Include and run your camera's description xacro:
 ```xml
 <xacro:include filename="$(find realsense2_description)/urdf/_d415.urdf.xacro" />
-<xacro:include filename="$(find realsense2_gz_description)/urdf/_d415.gazebo.xacro" />
-
-```
-Then call the xacros and specify the same `name` and other optional arguments.
-```xml
-<!-- URDF xacro-->
-<xacro:sensor_d415 parent="world" name="$(arg camera_name)" ...>
-  <origin xyz="0 0 0" rpy="0 0 0"/>
+...
+<xacro:sensor_d415 parent="my_robots_camera_mount_link" name="$(arg camera_name)">
+  <origin xyz="0 0 0" rpy="0 0 0"/> <!-- This robot's camera mount is aligned with the camera base -->
 </xacro:sensor_d415>
-<!-- Gazebo xacro-->
-<xacro:gazebo_d415 name="$(arg camera_name)" .../>
 ```
 
+2. Selectivly include Gz xacro with `if(sim_gazebo)` if you don't want the definition included when running with hardware:
+```xml
+<xacro:if value="${sim_gazebo}">
+  <xacro:include filename="$(find realsense2_gz_description)/urdf/_d415.gazebo.xacro" />
+  <xacro:gazebo_d415 name="$(arg camera_name)" gz_topic_name="$(arg camera_name)" type="rgbd" fps="15"/>
+</xacro:if>
+```
 > Note: Gazebo plugins can only be included once so the xacros in this repo assume that a parent will include/run the required Sensors plugin when starting simulation.
 This plugin can be started from your URDF or world.sdf file.
 ```xml
@@ -48,19 +34,50 @@ This plugin can be started from your URDF or world.sdf file.
 </gazebo>
 ```
 
-you can also refer to the the [example.urdf.xacro](./urdf/example_d415_gazebo.urdf.xacro) included.
-
-## Gazebo only features
-
-Gazebo offers a triggered based RGB camera that can be enabled by passing `triggered="true"` to the Gazebo description xacro.
-Currently this feature does not appear to not work with the RGBD sensor, but will hopefully be added soon.
-Switching the camera to only `trigger` when requested allows developers to better control the computation load required by each sensor.
-Note triggering is not a feature the Realsense hardware offers unfortunately.
-
-To trigger the camera from the command line you can publish on the Gazebo topic `camera_name/trigger`.
-```bash
-ign topic -t "/name/trigger" -m Boolean -p "data: true" -n 1
+3. When simulatting add to your robot's Gazebo launch file to start and configure the bridge `Node` so that you can see the simulated data as ROS topics:
+```python
+# Bridge
+gazebo_bridge = Node(
+    package="ros_gz_bridge",
+    executable="parameter_bridge",
+    parameters=[{"use_sim_time": True}],
+    arguments=[
+        "/wrist_camera/image@sensor_msgs/msg/Image[gz.msgs.Image",
+        "/wrist_camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image",
+        "/wrist_camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked",
+        "/wrist_camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+        "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
+    ],
+    remappings=[
+        (
+            "/wrist_camera/image",
+            "/wrist/camera/color/image_raw",
+        ),
+        (
+            "/wrist_camera/depth_image",
+            "/wrist/camera/depth_registered/image_rect",
+        ),
+        (
+            "/wrist_camera/points",
+            "/wrist/camera/depth/color/points",
+        ),
+        (
+            "/wrist_camera/camera_info",
+            "/wrist/camera/color/camera_info",
+        ),
+        (
+            "/wrist_camera/camera_info",
+            "/wrist/camera/depth_registered/camera_info",
+        )
+    ],
+    output="screen",
+)
 ```
+
+## Package Documentation:
+
+- [Generic Gazebo Camera macros](gz_camera_macros/README.md)
+- [Realsense2 Gazebo Camera macros](realsense2_gz_description/README.md)
 
 ## Contributing
 

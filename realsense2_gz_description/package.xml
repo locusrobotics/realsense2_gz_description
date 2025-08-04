@@ -11,9 +11,10 @@
 
   <depend>robot_state_publisher</depend>
   <depend>realsense2_description</depend>
+  <depend>gz_camera_macros</depend>
   <depend>ros_gz_bridge</depend>
   <depend>ros_gz_sim</depend>
-  <depend>rviz2</depend>
+  <!-- <depend>rviz2</depend> --> <!-- Required to run example launch file -->
   <depend>sensor_msgs</depend>
   <depend>xacro</depend>
 

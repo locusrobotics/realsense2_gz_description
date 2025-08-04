@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<robot name="gemini335Le_gz_camera" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:arg name="camera_name" default="camera" />
+  <!-- Include the desired camera URDF xacro -->
+  <xacro:include filename="$(find orbbec_description)/urdf/gemini335Le_macro.urdf.xacro" />
+  <!-- Include the matching gazebo camera xacro -->
+  <xacro:include filename="$(find orbbec_gz_description)/urdf/gemini335Le.gazebo.xacro" />
+
+  <link name="world" /> <!-- The parent of the camera in this example is the Gazebo world -->
+  <!-- Call the URDF xacro. -->
+  <xacro:gemini_335Le parent="world" name="$(arg camera_name)">
+    <!-- Place the camera above the ground and point it down a little to look at the objects in the scene -->
+    <origin xyz="0 0 0.5" rpy="0 0.1 0"/>
+  </xacro:gemini_335Le>
+
+  <!--
+  This example xacro is the top parent so we need to include the Gazebo Sensor plugin here so the camera we define in the xarco below works.
+  Starting this plugin in the top level allows developers to define multiple cameras in their robot and only include the plugin once.
+  If you don't want to start the Sensors plugin in your URDF you can move starting this plugin to the world.sdf file you are working with. -->
+  <gazebo>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+  </gazebo>
+
+  <!-- The xacros included in this repo assume the same link/joint names as gemini335Le when passed the same name -->
+  <xacro:gazebo_gemini335Le name="$(arg camera_name)"/>
+</robot>
