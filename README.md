@@ -2,9 +2,36 @@
 
 [![Format Status](https://github.com/locusrobotics/gz_camera_descriptions/actions/workflows/format.yaml/badge.svg)](https://github.com/locusrobotics/gz_camera_descriptions/actions/workflows/format.yaml)
 
-### Getting Starteed
+This repo is designed to make it easy to simulate a cameras in Gazebo (RGB, Depth or RGBD) by adding xacro macros for defining different camera types (RGB, Depth, RGBD).
+It also offers convince package of common sensors to make it easy to switch between simulation and hardware for the supported devices. If you would like your sensor added here please feel free to make a PR.
 
-This package assumes that you want to simulate a camera with Gazebo. In the [package.xml](gz_camera_macros/package.xml) of the generic macros or even a specific camera like the [Realsense](../gz_camera_descriptions/realsense2_gz_description/package.xml) requires you have Gazebo installed.
+<img src="doc/realsense_gazebo.png" width="50%" >
+
+The repo is divided up into 3 packages:
+- Generic ROS xacro's that can be used to make a supported camera type
+- xacros to define cameras in Gazebo that emulate a Realsense camera available in `realsense2_description`
+- xacros to define cameras in Gazebo that emulate a Orbbec camera available in the `orbbec_description` package on the [locus](https://github.com/locusrobotics/OrbbecSDK_ROS2/tree/locus) branch
+
+In the [package.xml](gz_camera_macros/package.xml) of the generic macros or even a specific camera like the [Realsense](../gz_camera_descriptions/realsense2_gz_description/package.xml)
+they do not require Gazebo be installed because they are just xacro definitions.
+You need the following packages available if you would like to run the example launch files.
+```xml
+  <depend>robot_state_publisher</depend>
+  <depend>image_proc</depend>
+  <depend>ros_gz_bridge</depend>
+  <depend>ros_gz_sim</depend>
+  <depend>rviz2</depend>
+```
+
+# Known Issues
+Gazebo parameter [optical_frame_id](https://github.com/gazebosim/gz-sensors/blob/fc8692c075001e9379d1ffe84c19149f49b43da5/src/CameraSensor.cc#L715-L716) is deprecated and will be removed at some point.
+Attempting to use the `<sensor>`/`<gz_frame_id>` parameter to correct the frame_id for the camera_info topic does not to play nice and results in lots of
+`XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].`
+warnings printed for each camera instance.
+
+The RGBD camera does NOT use the parameter `optical_frame_id` correctly any more and publishes the data with an incorrect frame_id.
+
+### Usage
 
 In your robots URDF....
 
@@ -34,7 +61,7 @@ This plugin can be started from your URDF or world.sdf file.
 </gazebo>
 ```
 
-3. When simulatting add to your robot's Gazebo launch file to start and configure the bridge `Node` so that you can see the simulated data as ROS topics:
+3. When simulating add to your robot's Gazebo launch file to start and configure the bridge `Node` so that you can see the simulated data as ROS topics:
 ```python
 # Bridge
 gazebo_bridge = Node(

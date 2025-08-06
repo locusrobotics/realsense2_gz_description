@@ -16,7 +16,7 @@ ros2 launch realsense2_gz_description example_realsense_gazebo.launch.py
 
 Which should start a simulated camera in Gazebo with a few objects in front of it. In the Rviz window that launches you can see the RGB images streaming along with the point cloud in the main view.
 
-<img src="doc/realsense_gazebo.png"  width="50%" >
+<img src="../doc/realsense_gazebo.png"  width="50%" >
 
 
 # Example Usage in URDF
