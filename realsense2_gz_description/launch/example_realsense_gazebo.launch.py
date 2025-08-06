@@ -67,9 +67,6 @@ def generate_launch_description():
                     "example_d415_gazebo.urdf.xacro",
                 ]
             ),
-            " ",
-            "camera_name:=gz_camera",
-            " ",
         ]
     )
 
@@ -103,7 +100,7 @@ def generate_launch_description():
             "-string",
             robot_description_content,
             "-name",
-            "realsense_camera",
+            "realsense_cameras",
             "-allow_renaming",
             "true",
             "-x",
@@ -122,41 +119,130 @@ def generate_launch_description():
     )
 
     # Bridge the camera data to ROS and match the default topics that the real camera would publish
-    # Note the gz_topic_name comes from <realsense_model>.gazebo.xacro which is defaulting to `camera` in this example.
+    #
+    # Note the gz_topic_name comes from <realsense_model>.gazebo.xacro which is set to to 'gz_topic_name="$(arg camera_name)"'
+    #
+    # Note the rgbd sensor in Gazebo does not return the correct frame_id for the data so
+    #   "/forward_camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked", does not working correctly!!
+    #
+    # Note the depth/camera_info is not publishing as expected so no messages are sent from Gz.
+    # In this repo we assume that the RGB and Depth sensors are in the same location so that both can share the the same `camera_info`
     gazebo_bridge = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
         parameters=[{"use_sim_time": True}],
         arguments=[
-            "/camera/image@sensor_msgs/msg/Image[gz.msgs.Image",
-            "/camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image",
-            "/camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked",
-            "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+            "/forward_camera/image@sensor_msgs/msg/Image[gz.msgs.Image",
+            "/forward_camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image",
+            "/forward_camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+            "/forward_camera/depth/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+            "/left_camera/image@sensor_msgs/msg/Image[gz.msgs.Image",
+            "/left_camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image",
+            "/left_camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+            "/left_camera/depth/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+            "/right_camera/image@sensor_msgs/msg/Image[gz.msgs.Image",
+            "/right_camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image",
+            "/right_camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+            "/right_camera/depth/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
             "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
         ],
         remappings=[
             (
-                "/camera/image",
-                "/camera/camera/color/image_raw",
+                "/forward_camera/image",
+                "/forward_camera/camera/color/image_raw",
             ),
             (
-                "/camera/depth_image",
-                "/camera/camera/depth_registered/image_rect",
+                "/forward_camera/depth_image",
+                "/forward_camera/camera/depth_registered/image_rect",
             ),
             (
-                "/camera/points",
-                "/camera/camera/depth/color/points",
+                "/forward_camera/camera_info",
+                "/forward_camera/camera/color/camera_info",
             ),
             (
-                "/camera/camera_info",
-                "/camera/camera/color/camera_info",
+                "/forward_camera/depth/camera_info",
+                "/forward_camera/camera/depth_registered/camera_info",
             ),
             (
-                "/camera/camera_info",
-                "/camera/camera/depth_registered/camera_info",
+                "/left_camera/image",
+                "/left_camera/camera/color/image_raw",
+            ),
+            (
+                "/left_camera/depth_image",
+                "/left_camera/camera/depth_registered/image_rect",
+            ),
+            (
+                "/left_camera/camera_info",
+                "/left_camera/camera/color/camera_info",
+            ),
+            (
+                "/left_camera/depth/camera_info",
+                "/left_camera/camera/depth_registered/camera_info",
+            ),
+            (
+                "/right_camera/image",
+                "/right_camera/camera/color/image_raw",
+            ),
+            (
+                "/right_camera/depth_image",
+                "/right_camera/camera/depth_registered/image_rect",
+            ),
+            (
+                "/right_camera/camera_info",
+                "/right_camera/camera/color/camera_info",
+            ),
+            (
+                "/right_camera/depth/camera_info",
+                "/right_camera/camera/depth_registered/camera_info",
             ),
         ],
         output="screen",
+    )
+
+    # Because the Point cloud data from Gazebo is wrong, generate it given the RGB + Depth images and camera_info
+    forward_point_cloud_node = Node(
+        package="depth_image_proc",
+        executable="point_cloud_xyzrgb_node",
+        output="both",
+        remappings=[
+            ("rgb/image_rect_color", "/forward_camera/camera/color/image_raw"),
+            ("rgb/camera_info", "/forward_camera/camera/color/camera_info"),
+            (
+                "depth_registered/image_rect",
+                "/forward_camera/camera/depth_registered/image_rect",
+            ),
+            ("points", "/forward_camera/camera/depth/color/points"),
+        ],
+    )
+
+    left_point_cloud_node = Node(
+        package="depth_image_proc",
+        executable="point_cloud_xyzrgb_node",
+        output="both",
+        remappings=[
+            ("rgb/image_rect_color", "/left_camera/camera/color/image_raw"),
+            ("rgb/camera_info", "/left_camera/camera/color/camera_info"),
+            (
+                "depth_registered/image_rect",
+                "/left_camera/camera/depth_registered/image_rect",
+            ),
+            ("points", "/left_camera/camera/depth/color/points"),
+        ],
+    )
+
+    right_point_cloud_node = Node(
+        package="depth_image_proc",
+        executable="point_cloud_xyzrgb_node",
+        output="both",
+        remappings=[
+            ("rgb/image_rect_color", "/right_camera/camera/color/image_raw"),
+            ("rgb/camera_info", "/right_camera/camera/color/camera_info"),
+            (
+                "depth_registered/image_rect",
+                "/right_camera/camera/depth_registered/image_rect",
+            ),
+            ("points", "/right_camera/camera/depth/color/points"),
+        ],
     )
 
     nodes_to_start = [
@@ -165,6 +251,9 @@ def generate_launch_description():
         OpaqueFunction(function=launch_gz),
         gz_spawn_entity,
         gazebo_bridge,
+        forward_point_cloud_node,
+        left_point_cloud_node,
+        right_point_cloud_node,
     ]
 
     return LaunchDescription(declared_arguments + nodes_to_start)

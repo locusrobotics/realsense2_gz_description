@@ -56,32 +56,17 @@ For example:
                 <mean>0</mean>
                 <stddev>0.00</stddev>
               </noise>
+              <!-- TODO this term is deprecated but behaves better than setting
+                  '<gz_frame_id>${name}_color_optical_frame</gz_frame_id>'
+                  in the <sensor> namespace -->
               <optical_frame_id>${name}_color_optical_frame</optical_frame_id>
               <triggered>${triggered}</triggered>
               <trigger_topic>${name}/trigger</trigger_topic>
           </camera>
-          <gz_frame_id>${name}_color_frame</gz_frame_id>
+          <!-- <gz_frame_id>${name}_color_optical_frame</gz_frame_id> -->
           <always_on>1</always_on>
           <update_rate>${fps}</update_rate>
           <topic>${gz_topic_name}/image</topic>
-          <enable_metrics>false</enable_metrics>
-        </sensor>
-        <sensor name="${name}_depth" type="depth">
-          <camera>
-            <horizontal_fov>${h_fov}</horizontal_fov>
-            <image>
-              <width>${image_width}</width>
-              <height>${image_height}</height>
-            </image>
-            <clip>
-              <near>0.1</near>
-              <far>10</far>
-            </clip>
-          </camera>
-          <gz_frame_id>${name}_color_frame</gz_frame_id>
-          <always_on>1</always_on>
-          <update_rate>${fps}</update_rate>
-          <topic>${gz_topic_name}/depth_image</topic>
           <enable_metrics>false</enable_metrics>
         </sensor>
     </gazebo>

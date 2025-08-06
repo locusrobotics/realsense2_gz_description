@@ -2,6 +2,7 @@
 <robot name="gazebo_gemini335Le" xmlns:xacro="http://www.ros.org/wiki/xacro" xmlns:gz="http://gazebosim.org/schema">
 
 <xacro:include filename="$(find gz_camera_macros)/urdf/rgb_camera.gazebo.xacro" />
+<xacro:include filename="$(find gz_camera_macros)/urdf/depth_camera.gazebo.xacro" />
 <xacro:include filename="$(find gz_camera_macros)/urdf/rgbd_camera.gazebo.xacro" />
 
 <!-- Xacro args
@@ -36,6 +37,14 @@
     <xacro:property name="min_depth" value="0.25" />
     <xacro:property name="max_depth" value="6.0" />
 
+    <!--
+    For this camera to work correctly we need to have a joint to attach to and Gazebo collapses fixed joints by default.
+    This preserves the camera_color_joint so that the camera_color_frame where the sensor is located is available.
+    -->
+    <gazebo reference='${name}_color_joint'>
+      <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>
+
     <xacro:if value="${type == 'rgbd'}">
         <xacro:gazebo_rgbd name="${name}"
                            fps="${fps}"
@@ -56,6 +65,24 @@
                         h_fov="${realsense_h_fov}"
                         v_fov="${realsense_v_fov}"
                         triggered="${triggered}"/>
+    </xacro:if>
+    <xacro:if value="${type == 'rgb+d'}">
+        <xacro:gazebo_rgb name="${name}"
+                          fps="${fps}"
+                          gz_topic_name="${gz_topic_name}"
+                          image_width="${image_width}"
+                          image_height="${image_height}"
+                          h_fov="${realsense_h_fov}"
+                          v_fov="${realsense_v_fov}"
+                          triggered="${triggered}"/>
+        <xacro:gazebo_depth name="${name}"
+                            fps="${fps}"
+                            gz_topic_name="${gz_topic_name}"
+                            image_width="${image_width}"
+                            image_height="${image_height}"
+                            h_fov="${realsense_h_fov}"
+                            v_fov="${realsense_v_fov}"
+                            triggered="${triggered}"/>
     </xacro:if>
 
 </xacro:macro>

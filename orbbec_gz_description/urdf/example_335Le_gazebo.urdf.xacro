@@ -24,5 +24,5 @@
   </gazebo>
 
   <!-- The xacros included in this repo assume the same link/joint names as gemini335Le when passed the same name -->
-  <xacro:gazebo_gemini335Le name="$(arg camera_name)"/>
+  <xacro:gazebo_gemini335Le name="$(arg camera_name)" gz_topic_name="$(arg camera_name)" type="rgb+d"/>
 </robot>

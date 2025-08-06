@@ -122,41 +122,60 @@ def generate_launch_description():
     )
 
     # Bridge the camera data to ROS and match the default topics that the real camera would publish
-    # Note the gz_topic_name comes from <realsense_model>.gazebo.xacro which is defaulting to `camera` in this example.
+    #
+    # Note the gz_topic_name comes from <camera_model>.gazebo.xacro which is set to to 'gz_topic_name="$(arg camera_name)"'
+    #
+    # Note the rgbd sensor in Gazebo does not return the correct frame_id for the data so
+    #   "/gz_camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked", does not work correctly!!
+    #
+    # Note the depth/camera_info is not publishing as expected so no messages are sent from Gz.
+    # In this repo we assume that the RGB and Depth sensors are in the same location so that both can share the the same `camera_info`
     gazebo_bridge = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
         parameters=[{"use_sim_time": True}],
         arguments=[
-            "/camera/image@sensor_msgs/msg/Image[gz.msgs.Image",
-            "/camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image",
-            "/camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked",
-            "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+            "/gz_camera/image@sensor_msgs/msg/Image[gz.msgs.Image",
+            "/gz_camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image",
+            "/gz_camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+            "/gz_camera/depth/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
             "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
         ],
         remappings=[
             (
-                "/camera/image",
-                "/camera/camera/color/image_raw",
+                "/gz_camera/image",
+                "/gz_camera/camera/color/image_raw",
             ),
             (
-                "/camera/depth_image",
-                "/camera/camera/depth_registered/image_rect",
+                "/gz_camera/depth_image",
+                "/gz_camera/camera/depth_registered/image_rect",
             ),
             (
-                "/camera/points",
-                "/camera/camera/depth/color/points",
+                "/gz_camera/camera_info",
+                "/gz_camera/camera/color/camera_info",
             ),
             (
-                "/camera/camera_info",
-                "/camera/camera/color/camera_info",
-            ),
-            (
-                "/camera/camera_info",
-                "/camera/camera/depth_registered/camera_info",
+                "/gz_camera/depth/camera_info",
+                "/gz_camera/camera/depth_registered/camera_info",
             ),
         ],
         output="screen",
+    )
+
+    # Because the Point cloud data from Gazebo is wrong, generate it w/ROS given the RGB + Depth images and camera_info
+    point_cloud_node = Node(
+        package="depth_image_proc",
+        executable="point_cloud_xyzrgb_node",
+        output="both",
+        remappings=[
+            ("rgb/image_rect_color", "/gz_camera/camera/color/image_raw"),
+            ("rgb/camera_info", "/gz_camera/camera/color/camera_info"),
+            (
+                "depth_registered/image_rect",
+                "/gz_camera/camera/depth_registered/image_rect",
+            ),
+            ("points", "/gz_camera/camera/depth/color/points"),
+        ],
     )
 
     nodes_to_start = [
@@ -165,6 +184,7 @@ def generate_launch_description():
         OpaqueFunction(function=launch_gz),
         gz_spawn_entity,
         gazebo_bridge,
+        point_cloud_node,
     ]
 
     return LaunchDescription(declared_arguments + nodes_to_start)

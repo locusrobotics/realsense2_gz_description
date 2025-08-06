@@ -87,6 +87,9 @@ For example:
                         <far>${max_depth}</far>
                     </clip>
                 </depth_camera>
+                <!-- TODO this term is deprecated but behaves better than setting
+                    '<gz_frame_id>${name}_color_optical_frame</gz_frame_id>'
+                    in the <sensor> namespace -->
                 <optical_frame_id>${name}_color_optical_frame</optical_frame_id>
             </camera>
             <gz_frame_id>${name}_color_frame</gz_frame_id>
