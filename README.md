@@ -2,7 +2,7 @@
 
 [![Format Status](https://github.com/locusrobotics/gz_camera_descriptions/actions/workflows/format.yaml/badge.svg)](https://github.com/locusrobotics/gz_camera_descriptions/actions/workflows/format.yaml)
 
-This repo is designed to make it easy to simulate a cameras in Gazebo (RGB, Depth or RGBD) by adding xacro macros for defining different camera types (RGB, Depth, RGBD).
+This repo is designed to make it easy to simulate a cameras in Gazebo (RGB, Depth or RGBD) and use them in ROS 2 by adding macro for defining different camera types (RGB, Depth, RGBD).
 It also offers convince package of common sensors to make it easy to switch between simulation and hardware for the supported devices. If you would like your sensor added here please feel free to make a PR.
 
 <img src="doc/realsense_gazebo.png" width="50%" >
@@ -14,7 +14,7 @@ The repo is divided up into 3 packages:
 
 In the [package.xml](gz_camera_macros/package.xml) of the generic macros or even a specific camera like the [Realsense](../gz_camera_descriptions/realsense2_gz_description/package.xml)
 they do not require Gazebo be installed because they are just xacro definitions.
-You need the following packages available if you would like to run the example launch files.
+You need the following packages available if you would like to run the simulate and run the example launch files.
 ```xml
   <depend>robot_state_publisher</depend>
   <depend>image_proc</depend>
