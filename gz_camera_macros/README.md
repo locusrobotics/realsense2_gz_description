@@ -48,7 +48,7 @@ you can also refer to the the [example.urdf.xacro](./urdf/example_d415_gazebo.ur
 ## Triggering RGB camera
 
 Gazebo offers a triggered based RGB camera that can be enabled by passing `triggered="true"` to the Gazebo description xacro.
-Currently this feature does not appear to not work with the RGBD sensor, but will hopefully be added soon.
+Currently this feature does not work with the RGBD sensor in Gazebo, but will hopefully be added soon.
 Switching the camera to only `trigger` when requested allows developers to better control the computation load required by each sensor.
 Note triggering on some hardware plarforms is not available.
 
