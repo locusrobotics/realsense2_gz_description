@@ -1,18 +1,22 @@
-# Gazebo Camera Descriptions
+# Gazebo Sensor Descriptions
 
-[![Format Status](https://github.com/locusrobotics/gz_camera_descriptions/actions/workflows/format.yaml/badge.svg)](https://github.com/locusrobotics/gz_camera_descriptions/actions/workflows/format.yaml)
+[![Format Status](https://github.com/locusrobotics/gz_sensor_descriptions/actions/workflows/format.yaml/badge.svg)](https://github.com/locusrobotics/gz_sensor_descriptions/actions/workflows/format.yaml)
 
-This repo is designed to make it easy to simulate a cameras in Gazebo (RGB, Depth or RGBD) and use them in ROS 2 by adding macros for defining different camera types (RGB, Depth, RGBD).
-It also offers convenient package of common sensors to make it easy to switch between simulation and hardware for the supported devices. If you would like your sensor added here please feel free to make a PR.
+This repo is designed to make it easy to simulate Gazebo sensors and use/define them in your robots URDF.
+It includes ROS2 URDF xacro's that properly define and configure the sensors for Gazebo.
+Currently cameras (RGB, Depth or RGBD) are the only sensors supported but more will be added.
 
-<img src="doc/realsense_gazebo.png" width="50%" >
+This repo also offers convenient packages of common off the shelf sensors to make it easy to switch between simulation and hardware for the supported devices. If you would like your sensor added here please feel free to make a PR.
+
+Example Realsense multi-camera simulation bridged to ROS 2:
+<img src="doc/realsense_gazebo.png" >
 
 The repo is divided up into 3 packages:
-- Generic ROS xacro's that can be used to make a supported camera type
-- xacros to define cameras in Gazebo that emulate a Realsense camera available in `realsense2_description`
-- xacros to define cameras in Gazebo that emulate a Orbbec camera available in the `orbbec_description` package on the [locus](https://github.com/locusrobotics/OrbbecSDK_ROS2/tree/locus) branch
+- Generic ROS xacro's that can be used to make a supported camera types
+- xacros to define cameras in Gazebo that emulate a Realsense device available in `realsense2_description`
+- xacros to define cameras in Gazebo that emulate a Orbbec device available in the `orbbec_description` package on the [locus](https://github.com/locusrobotics/OrbbecSDK_ROS2/tree/locus) branch
 
-In the [package.xml](gz_camera_macros/package.xml) of the generic macros or even a specific camera like the [Realsense](../gz_camera_descriptions/realsense2_gz_description/package.xml)
+In the [package.xml](gz_camera_macros/package.xml) of the generic macros or even a specific camera like the [Realsense](realsense2_gz_description/package.xml)
 they do not require Gazebo be installed because they are just xacro definitions.
 You need the following packages available if you would like to run the simulator and example launch files.
 ```xml

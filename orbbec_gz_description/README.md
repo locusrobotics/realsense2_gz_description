@@ -5,7 +5,7 @@ Description: This ROS 2 package is designed to be used in unison with [orbbec_de
 ## Running Example Launch
 
 This package includes a launch file to start Gazebo, bridge the data to ROS 2 and display the simulated camera data in Rviz.
-NOTE: this package does not [depend on Rviz](../orbbec_gz_description/package.xml#L16) so you may need to install it.
+NOTE: this package does not [depend on Rviz](package.xml#L16) so you may need to install it.
 
 Once you have built this package and sourced your workspace you can run
 ```bash
