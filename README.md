@@ -12,9 +12,9 @@ Example Realsense multi-camera simulation bridged to ROS 2:
 <img src="doc/realsense_gazebo.png" >
 
 The repo is divided up into 3 packages:
-- `gz_camera_macros` includes generic ROS xacro's that can be used to make a supported camera types
-- `realsense2_gz_description` includes xacros to define cameras in Gazebo that emulate a Realsense device available in `realsense2_description`
-- `orbbec_gz_description` includes xacros to define cameras in Gazebo that emulate a Orbbec device available in the `orbbec_description` package on the [locus](https://github.com/locusrobotics/OrbbecSDK_ROS2/tree/locus) branch
+- [Generic Gazebo Camera macros](gz_camera_macros/README.md) includes generic ROS xacro's that can be used to make a supported camera types
+- [Realsense2 Gazebo Camera macros](realsense2_gz_description/README.md) includes xacros to define cameras in Gazebo that emulate a Realsense device available in `realsense2_description`
+- [Orbbec Gazebo Camera macros](orbbec_gz_description/README.md) includes xacros to define cameras in Gazebo that emulate a Orbbec device available in the `orbbec_description` package on the [locus](https://github.com/locusrobotics/OrbbecSDK_ROS2/tree/locus) branch
 
 In the [package.xml](gz_camera_macros/package.xml) of the generic macros or even a specific camera like the [Realsense](realsense2_gz_description/package.xml)
 they do not require Gazebo be installed because they are just xacro definitions.
@@ -104,11 +104,6 @@ gazebo_bridge = Node(
     output="screen",
 )
 ```
-
-## Package Documentation:
-
-- [Generic Gazebo Camera macros](gz_camera_macros/README.md)
-- [Realsense2 Gazebo Camera macros](realsense2_gz_description/README.md)
 
 ## Contributing
 
