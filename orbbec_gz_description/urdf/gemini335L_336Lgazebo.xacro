@@ -31,6 +31,8 @@
     Simulated RGB and Depth sensors and have the same FOV as the RGB physical sensor.
     Note: physical hardware publishes pointcloud in `camera_depth_optical_frame` where this sensor will use
     the referenced camera color_frame. -->
+    <!-- note that the depth FOV is slightly different, 90-deg x 65-deg.
+    https://store.orbbec.com/products/gemini-335l -->
     <xacro:property name="realsense_h_fov" value="${94 * pi/180}" />
     <xacro:property name="realsense_v_fov" value="${68 * pi/180}" />
     <xacro:property name="min_depth" value="0.17" />

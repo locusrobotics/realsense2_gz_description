@@ -1,4 +1,4 @@
-# Realsense Gazebo description
+# Orbbec Gazebo description
 
 Description: This ROS 2 package is designed to be used in unison with [orbbec_description](https://github.com/locusrobotics/OrbbecSDK_ROS2/tree/locus) `locus` branch and allows for easy definition of cameras that can be simulated in Gazebo Fortress and newer. It may support other versions of Gazebo but this has not been tested.
 
@@ -19,7 +19,7 @@ Which should start a simulated camera in Gazebo with a few objects in front of i
 
 # Example Usage in URDF
 
-In your robots urdf.xacro include the desired Realsense model along with its Gazebo description.
+In your robots urdf.xacro include the desired Orbbec model along with its Gazebo description.
 ```xml
 <xacro:include filename="$(find orbbec_description)/urdf/gemini335Le.urdf.xacro" />
 <xacro:include filename="$(find orbbec_gz_description)/urdf/gemini335Le.gazebo.xacro" />
@@ -28,11 +28,11 @@ In your robots urdf.xacro include the desired Realsense model along with its Gaz
 Then call the xacros and specify the same `name` and other optional arguments.
 ```xml
 <!-- URDF xacro-->
-<xacro:sensor_d415 parent="world" name="$(arg camera_name)" ...>
+<xacro:gemini_335Le parent="world" name="$(arg camera_name)" ...>
   <origin xyz="0 0 0" rpy="0 0 0"/>
-</xacro:sensor_d415>
+</xacro:gemini_335Le>
 <!-- Gazebo xacro-->
-<xacro:gazebo_d415 name="$(arg camera_name)" .../>
+<xacro:gazebo_gemini335Le name="$(arg camera_name)" .../>
 ```
 
 > Note: Gazebo plugins can only be included once so the xacros in this repo assume that a parent will include/run the required Sensors plugin when starting simulation.
@@ -45,14 +45,13 @@ This plugin can be started from your URDF or world.sdf file.
 </gazebo>
 ```
 
-you can also refer to the the [example.urdf.xacro](./urdf/example_335Le_gazebo.urdf.xacro) included.
+You can also refer to the the [example.urdf.xacro](./urdf/example_335Le_gazebo.urdf.xacro) included.
 
-## Gazebo only features
+## Gazebo Triggering
 
 Gazebo offers a triggered based RGB camera that can be enabled by passing `triggered="true"` to the Gazebo description xacro.
 Currently this feature does not appear to not work with the RGBD sensor, but will hopefully be added soon.
 Switching the camera to only `trigger` when requested allows developers to better control the computation load required by each sensor.
-Note triggering is not a feature the Realsense hardware offers unfortunately.
 
 To trigger the camera from the command line you can publish on the Gazebo topic `camera_name/trigger`.
 ```bash

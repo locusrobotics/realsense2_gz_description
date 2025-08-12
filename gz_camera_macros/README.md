@@ -1,4 +1,4 @@
-# Realsense Gazebo Camera Macro's
+# Gazebo Camera Macro's
 
 ### Example Usage in URDF
 
@@ -16,8 +16,8 @@ Then call the desired macro and specify the same `name` and camera properties.
                            gz_topic_name="${gz_topic_name}"
                            image_width="${image_width}"
                            image_height="${image_height}"
-                           h_fov="${realsense_h_fov}"
-                           v_fov="${realsense_v_fov}"
+                           h_fov="${camera_h_fov}"
+                           v_fov="${camera_v_fov}"
                            min_depth="${min_depth}"
                            max_depth="${max_depth}"/>
     </xacro:if>
@@ -27,8 +27,8 @@ Then call the desired macro and specify the same `name` and camera properties.
                         gz_topic_name="${gz_topic_name}"
                         image_width="${image_width}"
                         image_height="${image_height}"
-                        h_fov="${realsense_h_fov}"
-                        v_fov="${realsense_v_fov}"
+                        h_fov="${camera_h_fov}"
+                        v_fov="${camera_v_fov}"
                         triggered="${triggered}"/>
     </xacro:if>
 ```
