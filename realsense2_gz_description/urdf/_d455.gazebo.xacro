@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<robot name="gazebo_d405" xmlns:xacro="http://www.ros.org/wiki/xacro" xmlns:gz="http://gazebosim.org/schema">
+<robot name="gazebo_d455" xmlns:xacro="http://www.ros.org/wiki/xacro" xmlns:gz="http://gazebosim.org/schema">
 
-<xacro:include filename="$(find realsense2_gz_description)/urdf/rgb_camera.gazebo.xacro" />
-<xacro:include filename="$(find realsense2_gz_description)/urdf/rgbd_camera.gazebo.xacro" />
+<xacro:include filename="$(find gz_camera_macros)/urdf/rgb_camera.gazebo.xacro" />
+<xacro:include filename="$(find gz_camera_macros)/urdf/rgbd_camera.gazebo.xacro" />
 
 <!-- Xacro args
     name: should match the name value passed to realsense2_description sensor xacro
@@ -15,7 +15,7 @@
              example command line trigger
              ign topic -t "/name/trigger" -m Boolean -p "data: true" -n 1
 -->
-<xacro:macro name="gazebo_d405" params="
+<xacro:macro name="gazebo_d455" params="
   name:=camera
   type:=rgbd
   fps:=15
@@ -24,17 +24,17 @@
   image_height:=720
   triggered:=false">
 
-    <!-- Realsense D405 RGB properties
+    <!-- Realsense D455 RGB properties
     Assumptions:
     Parent system (URDF or sdf) will start the Gazebo Sensors plugin. See notes in the camera.gazebo.xacros.
     Simulated RGB and Depth sensors are in the same location as the RGB sensor of the physical camera.
     Simulated RGB and Depth sensors and have the same FOV as the RGB physical sensor.
     Note: physical hardware publishes pointcloud in `camera_depth_optical_frame` where this sensor will use
     the referenced camera color_frame. -->
-    <xacro:property name="realsense_h_fov" value="${87 * pi/180}" />
-    <xacro:property name="realsense_v_fov" value="${58 * pi/180}" />
-    <xacro:property name="min_depth" value="0.07" />
-    <xacro:property name="max_depth" value="0.5" />
+    <xacro:property name="realsense_h_fov" value="${90 * pi/180}" />
+    <xacro:property name="realsense_v_fov" value="${65 * pi/180}" />
+    <xacro:property name="min_depth" value="0.52" />
+    <xacro:property name="max_depth" value="6.0" />
 
     <xacro:if value="${type == 'rgbd'}">
         <xacro:gazebo_rgbd name="${name}"

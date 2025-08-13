@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <robot name="gazebo_d415" xmlns:xacro="http://www.ros.org/wiki/xacro" xmlns:gz="http://gazebosim.org/schema">
 
-<xacro:include filename="$(find realsense2_gz_description)/urdf/rgb_camera.gazebo.xacro" />
-<xacro:include filename="$(find realsense2_gz_description)/urdf/rgbd_camera.gazebo.xacro" />
+<xacro:include filename="$(find gz_camera_macros)/urdf/rgb_camera.gazebo.xacro" />
+<xacro:include filename="$(find gz_camera_macros)/urdf/depth_camera.gazebo.xacro" />
+<xacro:include filename="$(find gz_camera_macros)/urdf/rgbd_camera.gazebo.xacro" />
 
 <!-- Xacro args
     name: should match the name value passed to realsense2_description sensor xacro
@@ -36,6 +37,10 @@
     <xacro:property name="min_depth" value="0.45" />
     <xacro:property name="max_depth" value="3.0" />
 
+    <!-- <gazebo reference='${name}_color_joint'>
+      <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>  -->
+
     <xacro:if value="${type == 'rgbd'}">
         <xacro:gazebo_rgbd name="${name}"
                            fps="${fps}"
@@ -49,13 +54,31 @@
     </xacro:if>
     <xacro:if value="${type == 'rgb'}">
         <xacro:gazebo_rgb name="${name}"
-                        fps="${fps}"
-                        gz_topic_name="${gz_topic_name}"
-                        image_width="${image_width}"
-                        image_height="${image_height}"
-                        h_fov="${realsense_h_fov}"
-                        v_fov="${realsense_v_fov}"
-                        triggered="${triggered}"/>
+                          fps="${fps}"
+                          gz_topic_name="${gz_topic_name}"
+                          image_width="${image_width}"
+                          image_height="${image_height}"
+                          h_fov="${realsense_h_fov}"
+                          v_fov="${realsense_v_fov}"
+                          triggered="${triggered}"/>
+    </xacro:if>
+    <xacro:if value="${type == 'rgb+d'}">
+        <xacro:gazebo_rgb name="${name}"
+                          fps="${fps}"
+                          gz_topic_name="${gz_topic_name}"
+                          image_width="${image_width}"
+                          image_height="${image_height}"
+                          h_fov="${realsense_h_fov}"
+                          v_fov="${realsense_v_fov}"
+                          triggered="${triggered}"/>
+        <xacro:gazebo_depth name="${name}"
+                            fps="${fps}"
+                            gz_topic_name="${gz_topic_name}"
+                            image_width="${image_width}"
+                            image_height="${image_height}"
+                            h_fov="${realsense_h_fov}"
+                            v_fov="${realsense_v_fov}"
+                            triggered="${triggered}"/>
     </xacro:if>
 
 </xacro:macro>

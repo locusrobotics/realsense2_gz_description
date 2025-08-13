@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>orbbec_gz_description</name>
+  <version>0.0.1</version>
+  <description>URDF xacro(s) that enable simulating Orbbec Cameras in Gazebo</description>
+  <maintainer email="marq.razz@gmail.com">Marq Rasmussen</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- Minimum dependencies -->
+  <depend>orbbec_description</depend>
+  <depend>gz_camera_macros</depend>
+  <depend>xacro</depend>
+  <!--
+  Below are the packages required to run the example launch file.
+  We don't include them here so that deployed robots that depend on this package do not require them.
+  Include these in your robots package if you want to simulate with the camera xacro's included here.
+   -->
+  <!--
+  <depend>robot_state_publisher</depend>
+  <depend>image_proc</depend>
+  <depend>ros_gz_bridge</depend>
+  <depend>ros_gz_sim</depend>
+  <depend>rviz2</depend>
+   -->
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

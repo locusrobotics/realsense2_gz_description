@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<robot name="gazebo_depth" xmlns:xacro="http://www.ros.org/wiki/xacro" xmlns:gz="http://gazebosim.org/schema">
+
+<!--
+Gazebo plugins can only be included once so this xacro assumes that a parent will include and configure them.
+This xacro requires Gazebo plugin:
+  - gz::sim::systems::Sensors
+  to publish simulated depth camera data
+
+For example:
+<gazebo>
+  <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+    <render_engine>ogre2</render_engine>
+  </plugin>
+</gazebo>
+-->
+<xacro:macro name="gazebo_depth" params="
+  name:=camera
+  fps:=15
+  triggered:=false
+  triggered:=false
+  gz_topic_name:=camera
+  image_width:=1280
+  image_height:=720
+  h_fov
+  v_fov">
+
+    <!--
+    We need to assume the data is coming from the `_color_optical_frame`
+    (i.e. registered in the same location as the RGB sensor)
+    because the depth camera is not publishing camera_info.
+    Note you will need to use `camera_info` from the RGB camera so settings should match.
+    -->
+
+    <gazebo reference="${name}_color_frame">
+        <sensor name="${name}_depth" type="depth_camera">
+          <camera>
+            <!-- TODO the depth camera_info is not working and does not publish to this topic -->
+            <camera_info_topic>${gz_topic_name}/depth/camera_info</camera_info_topic>
+            <horizontal_fov>${h_fov}</horizontal_fov>
+            <image>
+              <width>${image_width}</width>
+              <height>${image_height}</height>
+            </image>
+            <clip>
+              <near>0.1</near>
+              <far>10</far>
+            </clip>
+            <!-- TODO this term is deprecated but behaves better than setting
+                '<gz_frame_id>${name}_color_optical_frame</gz_frame_id>'
+                in the <sensor> namespace -->
+            <optical_frame_id>${name}_color_optical_frame</optical_frame_id>
+            <triggered>${triggered}</triggered>
+            <trigger_topic>${name}/trigger</trigger_topic>
+          </camera>
+          <!-- TODO once camera_info is working make this frame configurable -->
+          <!-- <gz_frame_id>${name}_color_optical_frame</gz_frame_id> -->
+          <always_on>1</always_on>
+          <update_rate>${fps}</update_rate>
+          <topic>${gz_topic_name}/depth_image</topic>
+          <enable_metrics>false</enable_metrics>
+        </sensor>
+    </gazebo>
+
+</xacro:macro>
+</robot>

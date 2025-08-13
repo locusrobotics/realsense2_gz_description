@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
-<robot name="gazebo_d435" xmlns:xacro="http://www.ros.org/wiki/xacro" xmlns:gz="http://gazebosim.org/schema">
+<robot name="gazebo_gemini_335L_336L" xmlns:xacro="http://www.ros.org/wiki/xacro" xmlns:gz="http://gazebosim.org/schema">
 
-<xacro:include filename="$(find realsense2_gz_description)/urdf/rgb_camera.gazebo.xacro" />
-<xacro:include filename="$(find realsense2_gz_description)/urdf/rgbd_camera.gazebo.xacro" />
+<xacro:include filename="$(find gz_camera_macros)/urdf/rgb_camera.gazebo.xacro" />
+<xacro:include filename="$(find gz_camera_macros)/urdf/rgbd_camera.gazebo.xacro" />
 
 <!-- Xacro args
-    name: should match the name value passed to realsense2_description sensor xacro
+    name: should match the name value passed to orbbec_description sensor xacro
     type:  valid values [rgb or rgbd]. Sensor type you would like to simulate
     fps: the target frame rate of the camera images
     gz_topic_name: the topic name the image and camera_info are published to Gazebo topics
-    image_width: See Realsense documentation for what the physical sensor supports
-    image_height: See Realsense documentation for what the physical sensor supports
+    image_width: See Orbbec documentation for what the physical sensor supports
+    image_height: See Orbbec documentation for what the physical sensor supports
     trigger: valid values [true, false]. Only supported with 'type=rgb' and will only publish a single image when triggered on Gazebo topic '${name}/trigger'
              example command line trigger
              ign topic -t "/name/trigger" -m Boolean -p "data: true" -n 1
 -->
-<xacro:macro name="gazebo_d435" params="
+<xacro:macro name="gazebo_gemini_335L_336L" params="
   name:=camera
   type:=rgbd
   fps:=15
@@ -24,17 +24,19 @@
   image_height:=720
   triggered:=false">
 
-    <!-- Realsense D435 RGB properties
+    <!-- Orbbec gemini_335L_336L RGB properties
     Assumptions:
     Parent system (URDF or sdf) will start the Gazebo Sensors plugin. See notes in the camera.gazebo.xacros.
     Simulated RGB and Depth sensors are in the same location as the RGB sensor of the physical camera.
     Simulated RGB and Depth sensors and have the same FOV as the RGB physical sensor.
     Note: physical hardware publishes pointcloud in `camera_depth_optical_frame` where this sensor will use
     the referenced camera color_frame. -->
-    <xacro:property name="realsense_h_fov" value="${69 * pi/180}" />
-    <xacro:property name="realsense_v_fov" value="${42 * pi/180}" />
-    <xacro:property name="min_depth" value="0.28" />
-    <xacro:property name="max_depth" value="3.0" />
+    <!-- note that the depth FOV is slightly different, 90-deg x 65-deg.
+    https://store.orbbec.com/products/gemini-335l -->
+    <xacro:property name="realsense_h_fov" value="${94 * pi/180}" />
+    <xacro:property name="realsense_v_fov" value="${68 * pi/180}" />
+    <xacro:property name="min_depth" value="0.17" />
+    <xacro:property name="max_depth" value="6.0" />
 
     <xacro:if value="${type == 'rgbd'}">
         <xacro:gazebo_rgbd name="${name}"

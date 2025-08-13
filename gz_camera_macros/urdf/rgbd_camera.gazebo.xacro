@@ -87,6 +87,9 @@ For example:
                         <far>${max_depth}</far>
                     </clip>
                 </depth_camera>
+                <!-- WARNING
+                    This term is deprecated and the point clouds published from this sensor have the incorrect frame_id associated with the data.
+                -->
                 <optical_frame_id>${name}_color_optical_frame</optical_frame_id>
             </camera>
             <gz_frame_id>${name}_color_frame</gz_frame_id>
